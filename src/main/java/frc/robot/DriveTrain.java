@@ -6,10 +6,6 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 public class DriveTrain {
 
-    // TalonSRX backLeft;
-    // TalonSRX backRight;
-    // TalonSRX frontLeft;
-    // TalonSRX frontRight;
     WPI_TalonSRX backLeft;
     WPI_TalonSRX backRight;
     WPI_TalonSRX frontLeft;
@@ -36,8 +32,8 @@ public class DriveTrain {
     }
 
     public void mecDrive(Joystick j) {
-        
         mDrive.driveCartesian(0.5 * j.getX(), -0.5 * j.getY(), 0.5 * j.getZ());
+
     }
 
 }

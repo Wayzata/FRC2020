@@ -7,7 +7,7 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+//import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -29,11 +29,12 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+
   DriveTrain driveTrain;
   Ultrasonic ultrasonic;
 
   Joystick joy;
-
+  Shooter shooter;
   //WPI_TalonSRX t;
 
   /**
@@ -48,6 +49,7 @@ public class Robot extends TimedRobot {
 
     driveTrain = new DriveTrain();
     ultrasonic = new Ultrasonic(9, 8);
+    shooter = new Shooter();
 
     joy = new Joystick(0);
 
@@ -111,8 +113,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     driveTrain.mecDrive(joy);
-    //t.set(1.0);
+    //t.set(1);
+    shooter.spinnyBoi2k(joy.getRawButtonPressed(3));
   }
+
+  
 
   /**
    * This function is called periodically during test mode.
