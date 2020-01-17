@@ -7,6 +7,11 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.Encoder;
+
 //import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -35,7 +40,7 @@ public class Robot extends TimedRobot {
 
   Joystick joy;
   Shooter shooter;
-  //WPI_TalonSRX t;
+  WPI_TalonSRX t;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -53,11 +58,13 @@ public class Robot extends TimedRobot {
 
     joy = new Joystick(0);
 
-    //t = new WPI_TalonSRX(0);
+    t = new WPI_TalonSRX(0);
 
     
 
     ultrasonic.setAutomaticMode(true);
+    t.set(ControlMode.Position, 5000);
+
   }
 
   /**
@@ -71,6 +78,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     SmartDashboard.putNumber("Ultrasonic Reading", ultrasonic.getRangeInches());
+    System.out.println(t.getSelectedSensorPosition());
   }
 
   /**
@@ -112,9 +120,14 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    driveTrain.mecDrive(joy);
-    //t.set(1);
-    shooter.spinnyBoi2k(joy.getRawButtonPressed(3));
+    //driveTrain.mecDrive(joy);
+    //t.set(joy.getY());
+
+    if(joy.getRawButtonPressed(5)) {
+      t.setSelectedSensorPosition(0);
+    }
+
+    //shooter.spinnyBoi2k(joy.getRawButton(3));
   }
 
   
