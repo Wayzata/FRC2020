@@ -8,8 +8,10 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 
 //import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -17,9 +19,9 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,13 +36,14 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
-
   DriveTrain driveTrain;
   Ultrasonic ultrasonic;
 
   Joystick joy;
   Shooter shooter;
   WPI_TalonSRX t;
+
+  ADXRS450_Gyro gyro;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -52,19 +55,48 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    driveTrain = new DriveTrain();
-    ultrasonic = new Ultrasonic(9, 8);
+    //driveTrain = new DriveTrain();
+    //ultrasonic = new Ultrasonic(9, 8);
     shooter = new Shooter();
 
     joy = new Joystick(0);
 
     t = new WPI_TalonSRX(0);
 
+    gyro = new ADXRS450_Gyro();
     
 
-    ultrasonic.setAutomaticMode(true);
-    t.set(ControlMode.Position, 5000);
+    //ultrasonic.setAutomaticMode(true);
+    //t.set(ControlMode.Position, 5000);
 
+    t.configFactoryDefault();
+
+    t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+
+    t.setSensorPhase(true);
+
+    t.setInverted(false);
+    
+    t.configNominalOutputForward(0, 30);
+    t.configNominalOutputReverse(0, 30);
+    t.configPeakOutputForward(1, 30);
+    t.configPeakOutputReverse(-1, 30);
+
+    t.configMotionAcceleration(0, 500);
+    t.configMotionCruiseVelocity(0, 500);
+    
+    t.configAllowableClosedloopError(0, 0, 30);
+
+    //First parameter is PID_loop_id
+    t.config_kF(0, 0.094);
+    t.config_kP(0, .35);
+    t.config_kI(0, 0.001);
+    t.config_kD(0, 3);
+
+    t.setSelectedSensorPosition(0, 0, 30);
+    //t.set(ControlMode.Position, 100);
+
+    //t.clearMotionProfileTrajectories();
   }
 
   /**
@@ -77,8 +109,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Ultrasonic Reading", ultrasonic.getRangeInches());
-    System.out.println(t.getSelectedSensorPosition());
+    //SmartDashboard.putNumber("Ultrasonic Reading", ultrasonic.getRangeInches());
+    //System.out.println(t.getSelectedSensorPosition());
+    //System.out.println("Velocity: " + t.getSelectedSensorVelocity() + "       Position: " + t.getSelectedSensorPosition(0));
+    System.out.println(gyro.getAngle());
   }
 
   /**
@@ -124,7 +158,20 @@ public class Robot extends TimedRobot {
     //t.set(joy.getY());
 
     if(joy.getRawButtonPressed(5)) {
-      t.setSelectedSensorPosition(0);
+      t.setSelectedSensorPosition(0, 0, 30);
+      //t.set(ControlMode.Position, 10000);
+    }
+    else if(joy.getRawButtonPressed(3)) {
+      t.set(ControlMode.Velocity, 1024);
+    }
+    else if(joy.getRawButtonPressed(6)) {
+      t.set(ControlMode.Velocity, -1024);
+    }
+    else if(joy.getRawButtonPressed(4)) {
+      t.set(ControlMode.Velocity, 0);
+    }
+    else if(joy.getRawButtonPressed(11)) {
+      t.set(ControlMode.Position, t.getSelectedSensorPosition(0) + 1024);
     }
 
     //shooter.spinnyBoi2k(joy.getRawButton(3));
