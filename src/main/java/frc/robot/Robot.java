@@ -11,6 +11,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 
@@ -45,6 +47,8 @@ public class Robot extends TimedRobot {
 
   ADXRS450_Gyro gyro;
 
+  NetworkTable limeTable;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -67,36 +71,12 @@ public class Robot extends TimedRobot {
     
 
     //ultrasonic.setAutomaticMode(true);
-    //t.set(ControlMode.Position, 5000);
 
-    t.configFactoryDefault();
+    PIDSetup();
 
-    t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-
-    t.setSensorPhase(true);
-
-    t.setInverted(false);
     
-    t.configNominalOutputForward(0, 30);
-    t.configNominalOutputReverse(0, 30);
-    t.configPeakOutputForward(1, 30);
-    t.configPeakOutputReverse(-1, 30);
 
-    t.configMotionAcceleration(0, 500);
-    t.configMotionCruiseVelocity(0, 500);
-    
-    t.configAllowableClosedloopError(0, 0, 30);
-
-    //First parameter is PID_loop_id
-    t.config_kF(0, 0.094);
-    t.config_kP(0, .35);
-    t.config_kI(0, 0.001);
-    t.config_kD(0, 3);
-
-    t.setSelectedSensorPosition(0, 0, 30);
-    //t.set(ControlMode.Position, 100);
-
-    //t.clearMotionProfileTrajectories();
+    limeTable = NetworkTableInstance.getDefault().getTable("limeyboi");
   }
 
   /**
@@ -112,7 +92,8 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("Ultrasonic Reading", ultrasonic.getRangeInches());
     //System.out.println(t.getSelectedSensorPosition());
     //System.out.println("Velocity: " + t.getSelectedSensorVelocity() + "       Position: " + t.getSelectedSensorPosition(0));
-    System.out.println(gyro.getAngle());
+    //System.out.println(gyro.getAngle());
+
   }
 
   /**
@@ -184,5 +165,38 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+
+  private void PIDSetup() {
+    //t.set(ControlMode.Position, 5000);
+
+    t.configFactoryDefault();
+
+    t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+
+    t.setSensorPhase(true);
+
+    t.setInverted(false);
+    
+    t.configNominalOutputForward(0, 30);
+    t.configNominalOutputReverse(0, 30);
+    t.configPeakOutputForward(1, 30);
+    t.configPeakOutputReverse(-1, 30);
+
+    t.configMotionAcceleration(0, 500);
+    t.configMotionCruiseVelocity(0, 500);
+    
+    t.configAllowableClosedloopError(0, 0, 30);
+
+    //First parameter is PID_loop_id
+    t.config_kF(0, 0.094);
+    t.config_kP(0, .35);
+    t.config_kI(0, 0.001);
+    t.config_kD(0, 3);
+
+    t.setSelectedSensorPosition(0, 0, 30);
+    //t.set(ControlMode.Position, 100);
+
+    //t.clearMotionProfileTrajectories();
   }
 }
