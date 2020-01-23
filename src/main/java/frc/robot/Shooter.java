@@ -2,26 +2,23 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-
 public class Shooter {
+  WPI_TalonSRX shooterMotor0;
+  WPI_TalonSRX shooterMotor1;
 
-    WPI_TalonSRX shooterMotor1;
-    WPI_TalonSRX shooterMotor2;
+  public Shooter(WPI_TalonSRX talon0, WPI_TalonSRX talon1) {
+    shooterMotor0 = talon0;
+    shooterMotor1 = talon1;
+  }
 
-    public Shooter() {
-    shooterMotor1 = new WPI_TalonSRX(0);    
-    shooterMotor2 = new WPI_TalonSRX(1);
-    }
-
-    public void spinnyBoi2k(boolean isButtonPressed){
-    
-    if(isButtonPressed == true){
-        shooterMotor1.set(-1);
-        shooterMotor2.set(1);
+  public void setEnable(boolean enable) {    
+    if (enable == true) {
+        shooterMotor0.set(RobotConstants.shooterSpeed);
+        shooterMotor1.set(RobotConstants.shooterSpeed);
     } else {
+        shooterMotor0.set(0);
         shooterMotor1.set(0);
-        shooterMotor2.set(0);
     }
     
-    }
+  }
 }

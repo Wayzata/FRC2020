@@ -8,43 +8,35 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
 
 public class DriveTrain {
 
-    WPI_TalonSRX backLeft;
-    WPI_TalonSRX backRight;
-    WPI_TalonSRX frontLeft;
-    WPI_TalonSRX frontRight;
+    WPI_TalonSRX leftRear;
+    WPI_TalonSRX rightRear;
+    WPI_TalonSRX leftFront;
+    WPI_TalonSRX rightFront;
 
     Encoder encoder;
 
     MecanumDrive mDrive;
 
-    public DriveTrain() {
-        // frontLeft = new TalonSRX(0);
-        // frontRight = new TalonSRX(1);
-        // backRight = new TalonSRX(2);
-        // backLeft = new TalonSRX(3);
-        frontLeft = new WPI_TalonSRX(6);
-        frontRight = new WPI_TalonSRX(7);
-        backRight = new WPI_TalonSRX(9);
-        backLeft = new WPI_TalonSRX(8);
+    public DriveTrain(WPI_TalonSRX _leftFront, WPI_TalonSRX _rightFront, WPI_TalonSRX _leftRear, WPI_TalonSRX _rightRear) {
+        leftFront = _leftFront;
+        rightFront = _rightFront;
+        leftRear = _leftRear;
+        rightRear = _rightRear;
 
-        // frontLeft.setInverted(true);
-        // backRight.setInverted(true);
-       
-        mDrive = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
-       
+        mDrive = new MecanumDrive(leftFront, leftRear, rightFront, rightRear);       
     }
 
-    public void mecDrive(Joystick j) {
-        mDrive.driveCartesian(0.5 * j.getX(), -0.5 * j.getY(), 0.5 * j.getZ());
+    public void drive(double x, double y, double z) {
+        mDrive.driveCartesian(x, y, z);
 
     }
 
     public void printThing() {
-        System.out.println(frontLeft.getSelectedSensorPosition());
+        System.out.println(leftFront.getSelectedSensorPosition());
     }
 
     public void resetThing() {
-        frontLeft.setSelectedSensorPosition(0);
+        leftFront.setSelectedSensorPosition(0);
     }
 
 }

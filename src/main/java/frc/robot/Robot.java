@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
   DriveTrain driveTrain;
   Ultrasonic ultrasonic;
 
-  Joystick joy;
+  Joystick joystick;
   Shooter shooter;
   WPI_TalonSRX testbedTalon;
 
@@ -52,19 +52,34 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     // Create all the motor drivers/controllers
-    testbedTalon = TalonSrxFactory.createAndInit(RobotConstants.testbedTalonConfig);
+    if (RobotConstants.enableTestbedMotor) {
+      testbedTalon = TalonSrxFactory.createAndInit(RobotConstants.testbedTalonConfig);
+    }
 
     // Create the input sensors/devices
-    joy = new Joystick(0);
-    gyro = new ADXRS450_Gyro();
-    //ultrasonic = new Ultrasonic(9, 8);
+    joystick = new Joystick(RobotConstants.joystickPort);
+
+    if (RobotConstants.enableGyro) {
+      gyro = new ADXRS450_Gyro();
+    }
+    ultrasonic = new Ultrasonic(RobotConstants.ultrasonicSensorPingCh, RobotConstants.ultrasonicSensorEchoCh);
 
     // Create the subsystem components
-    //driveTrain = new DriveTrain();
-    shooter = new Shooter();
+    if (RobotConstants.enableDrivetrain) {
+      driveTrain = new DriveTrain(TalonSrxFactory.createAndInit(RobotConstants.drivetrainLFTalonConfig),
+                                  TalonSrxFactory.createAndInit(RobotConstants.drivetrainRFTalonConfig),
+                                  TalonSrxFactory.createAndInit(RobotConstants.drivetrainLRTalonConfig),
+                                  TalonSrxFactory.createAndInit(RobotConstants.drivetrainRRTalonConfig));
+      }
+
+    if (RobotConstants.enableShooter) {
+      shooter = new Shooter(TalonSrxFactory.createAndInit(RobotConstants.shooter0TalonConfig), TalonSrxFactory.createAndInit(RobotConstants.shooter1TalonConfig));
+    }
 
     // Initialize/start any sensors that need to be started.
-    //ultrasonic.setAutomaticMode(true);
+    if (RobotConstants.enableUltrasonicSensor) {
+      ultrasonic.setAutomaticMode(true);
+    }
   }
 
   /**
@@ -77,9 +92,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    //SmartDashboard.putNumber("Ultrasonic Reading", ultrasonic.getRangeInches());
-    //System.out.println("Velocity: " + t.getSelectedSensorVelocity() + "       Position: " + t.getSelectedSensorPosition(0));
-    System.out.println(gyro.getAngle());
+    if (RobotConstants.enableUltrasonicSensor) {
+      SmartDashboard.putNumber("Ultrasonic Reading", ultrasonic.getRangeInches());
+    }
+
+    if (RobotConstants.enableTestbedMotor) {
+      System.out.println("Velocity: " + testbedTalon.getSelectedSensorVelocity() + "       Position: " + testbedTalon.getSelectedSensorPosition(0));
+    }
+    
+    if (RobotConstants.enableGyro) {
+      System.out.println(gyro.getAngle());
+    }
   }
 
   /**
@@ -121,27 +144,34 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    //driveTrain.mecDrive(joy);
-    //testbedTalon.set(joy.getY());
-
-    if(joy.getRawButtonPressed(5)) {
-      testbedTalon.setSelectedSensorPosition(0, 0, RobotConstants.TalonConfigTimeoutMs);
-      //testbedTalon.set(ControlMode.Position, 10000);
-    }
-    else if(joy.getRawButtonPressed(3)) {
-      testbedTalon.set(ControlMode.Velocity, 1024);
-    }
-    else if(joy.getRawButtonPressed(6)) {
-      testbedTalon.set(ControlMode.Velocity, -1024);
-    }
-    else if(joy.getRawButtonPressed(4)) {
-      testbedTalon.set(ControlMode.Velocity, 0);
-    }
-    else if(joy.getRawButtonPressed(11)) {
-      testbedTalon.set(ControlMode.Position, testbedTalon.getSelectedSensorPosition(0) + 1024);
+    if (RobotConstants.enableDrivetrain) {
+      driveTrain.drive(joystick.getX() * RobotConstants.drivetrainSpeedScaleFactor, 
+                      -joystick.getY() * RobotConstants.drivetrainSpeedScaleFactor,
+                      joystick.getZ() * RobotConstants.drivetrainSpeedScaleFactor);
     }
 
-    //shooter.spinnyBoi2k(joy.getRawButton(3));
+    if (RobotConstants.enableShooter) {
+      shooter.setEnable(joystick.getRawButton(3));
+    }
+
+    if (RobotConstants.enableTestbedMotor) {
+      if(joystick.getRawButtonPressed(5)) {
+        testbedTalon.setSelectedSensorPosition(0, 0, RobotConstants.TalonConfigTimeoutMs);
+        //testbedTalon.set(ControlMode.Position, 10000);
+      }
+      else if(joystick.getRawButtonPressed(3)) {
+        testbedTalon.set(ControlMode.Velocity, 1024);
+      }
+      else if(joystick.getRawButtonPressed(6)) {
+        testbedTalon.set(ControlMode.Velocity, -1024);
+      }
+      else if(joystick.getRawButtonPressed(4)) {
+        testbedTalon.set(ControlMode.Velocity, 0);
+      }
+      else if(joystick.getRawButtonPressed(11)) {
+        testbedTalon.set(ControlMode.Position, testbedTalon.getSelectedSensorPosition(0) + 1024);
+      }
+    }
   }
 
   
