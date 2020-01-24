@@ -18,20 +18,21 @@ public class DriveTrain {
     MecanumDrive mDrive;
 
     public DriveTrain() {
-        // frontLeft = new TalonSRX(0);
+        // frontLeft = new WPI_TalonSRX(0);
         // frontRight = new TalonSRX(1);
         // backRight = new TalonSRX(2);
         // backLeft = new TalonSRX(3);
-        frontLeft = new WPI_TalonSRX(6);
-        frontRight = new WPI_TalonSRX(7);
-        backRight = new WPI_TalonSRX(9);
-        backLeft = new WPI_TalonSRX(8);
+        frontLeft = new WPI_TalonSRX(1);
+        frontRight = new WPI_TalonSRX(0);
+        backRight = new WPI_TalonSRX(3);
+        backLeft = new WPI_TalonSRX(2);
 
         // frontLeft.setInverted(true);
         // backRight.setInverted(true);
        
         mDrive = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
-       
+        mDrive.setSafetyEnabled(false);
+        
     }
 
     public void mecDrive(Joystick j) {

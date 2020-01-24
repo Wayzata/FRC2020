@@ -39,13 +39,13 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
   DriveTrain driveTrain;
-  Ultrasonic ultrasonic;
+ // Ultrasonic ultrasonic;
 
   Joystick joy;
   Shooter shooter;
   WPI_TalonSRX t;
 
-  ADXRS450_Gyro gyro;
+ // ADXRS450_Gyro gyro;
 
   NetworkTable limeTable;
 
@@ -59,20 +59,20 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
-    //driveTrain = new DriveTrain();
+    driveTrain = new DriveTrain();
     //ultrasonic = new Ultrasonic(9, 8);
     shooter = new Shooter();
 
     joy = new Joystick(0);
 
-    t = new WPI_TalonSRX(0);
+    //t = new WPI_TalonSRX(0);
 
-    gyro = new ADXRS450_Gyro();
+    //gyro = new ADXRS450_Gyro();
     
 
     //ultrasonic.setAutomaticMode(true);
 
-    PIDSetup();
+    //PIDSetup();
 
     
 
@@ -93,7 +93,6 @@ public class Robot extends TimedRobot {
     //System.out.println(t.getSelectedSensorPosition());
     //System.out.println("Velocity: " + t.getSelectedSensorVelocity() + "       Position: " + t.getSelectedSensorPosition(0));
     //System.out.println(gyro.getAngle());
-
   }
 
   /**
@@ -135,9 +134,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    //driveTrain.mecDrive(joy);
+    driveTrain.mecDrive(joy);
     //t.set(joy.getY());
-
+    /*
     if(joy.getRawButtonPressed(5)) {
       t.setSelectedSensorPosition(0, 0, 30);
       //t.set(ControlMode.Position, 10000);
@@ -154,7 +153,7 @@ public class Robot extends TimedRobot {
     else if(joy.getRawButtonPressed(11)) {
       t.set(ControlMode.Position, t.getSelectedSensorPosition(0) + 1024);
     }
-
+    */
     //shooter.spinnyBoi2k(joy.getRawButton(3));
   }
 
