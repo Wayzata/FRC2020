@@ -76,7 +76,6 @@ public class Robot extends TimedRobot {
 
     
 
-    limeTable = NetworkTableInstance.getDefault().getTable("limeyboi");
   }
 
   /**
@@ -93,7 +92,7 @@ public class Robot extends TimedRobot {
     //System.out.println(t.getSelectedSensorPosition());
     //System.out.println("Velocity: " + t.getSelectedSensorVelocity() + "       Position: " + t.getSelectedSensorPosition(0));
     //System.out.println(gyro.getAngle());
-
+    
   }
 
   /**
@@ -138,24 +137,31 @@ public class Robot extends TimedRobot {
     //driveTrain.mecDrive(joy);
     //t.set(joy.getY());
 
-    if(joy.getRawButtonPressed(5)) {
-      t.setSelectedSensorPosition(0, 0, 30);
-      //t.set(ControlMode.Position, 10000);
-    }
-    else if(joy.getRawButtonPressed(3)) {
-      t.set(ControlMode.Velocity, 1024);
-    }
-    else if(joy.getRawButtonPressed(6)) {
-      t.set(ControlMode.Velocity, -1024);
-    }
-    else if(joy.getRawButtonPressed(4)) {
-      t.set(ControlMode.Velocity, 0);
-    }
-    else if(joy.getRawButtonPressed(11)) {
-      t.set(ControlMode.Position, t.getSelectedSensorPosition(0) + 1024);
-    }
+    // if(joy.getRawButtonPressed(5)) {
+    //   t.setSelectedSensorPosition(0, 0, 30);
+    //   //t.set(ControlMode.Position, 10000);
+    // }
+    // else if(joy.getRawButtonPressed(3)) {
+    //   t.set(ControlMode.Velocity, 1024);
+    // }
+    // else if(joy.getRawButtonPressed(6)) {
+    //   t.set(ControlMode.Velocity, -1024);
+    // }
+    // else if(joy.getRawButtonPressed(4)) {
+    //   t.set(ControlMode.Velocity, 0);
+    // }
+    // else if(joy.getRawButtonPressed(11)) {
+    //   t.set(ControlMode.Position, t.getSelectedSensorPosition(0) + 1024);
+    // }
 
     //shooter.spinnyBoi2k(joy.getRawButton(3));
+
+    if(joy.getRawButton(3)) {
+      driveTrain.oneUpRafael();
+    }
+    else {
+      driveTrain.fullStop();
+    }
   }
 
   
