@@ -11,9 +11,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
 
-    double ty, tx, tv, ta, steeringAdjust, forwardAdjust;
-    final double kP = 0.03;
-    final double speed = 0.3;
+    double ty, tx, tv, ta, steeringAdjust, forwardAdjust, integral, priorI = 0, deriv=0, priorE=0;
+    final double kP = 0.0175;
+    final double kF = 0.1;
+    final double kI = 0.005;
+    final double kD = 0.3;
+    final double speed = 0.5;
 
     WPI_TalonSRX backLeft;
     WPI_TalonSRX backRight;
@@ -46,7 +49,7 @@ public class DriveTrain {
     }
 
     public void mecDrive(Joystick j) {
-        mDrive.driveCartesian(0.5 * j.getX(), -0.5 * j.getY(), 0.5 * j.getZ());
+        mDrive.driveCartesian(0.4 * j.getX(), -0.4 * j.getY(), 0.4 * j.getZ());
 
     }
 
@@ -65,20 +68,33 @@ public class DriveTrain {
     public void oneUpRafael() {
         tv = limeTable.getEntry("tv").getDouble(0);
         tx = limeTable.getEntry("tx").getDouble(0);
+        ty = limeTable.getEntry("ty").getDouble(0);
         ta = limeTable.getEntry("ta").getDouble(0);
         SmartDashboard.putNumber("Area", ta);
 
         if(tv == 1) {
-            if (xIsAcceptable(tx)) {
-                steeringAdjust = 0.0;
+            if(xIsAcceptable(tx)) {
+                mDrive.driveCartesian(0, 0, 0);
+                return;
             }
             else {
-                steeringAdjust = kP * tx;
+                integral = (priorI + (tx*0.027));
+                deriv = (tx - priorE) / 2.7;
+                steeringAdjust = (kP * tx) + (kI * integral) + (kD * deriv);
+                priorE = tx;
+                priorI = integral;
             }
         }
         else {
             mDrive.driveCartesian(0, 0, speed);
             return;
+        }
+
+        if(steeringAdjust > 0) {
+            steeringAdjust += kF;
+        }
+        else {
+            steeringAdjust -= kF;
         }
 
         if(steeringAdjust > speed) {
@@ -91,14 +107,28 @@ public class DriveTrain {
         System.out.println(steeringAdjust);
         SmartDashboard.putNumber("Steering Adjust", steeringAdjust);
         
-        if (ta < 0.5 && tv == 1){
-            mDrive.driveCartesian(0, 0.3, steeringAdjust);
+        if (!yIsAcceptable(ty) && tv == 1){
+            if (ty > -3)
+                mDrive.driveCartesian(0, -0.5, steeringAdjust);
+            else if (ty < 3)
+                mDrive.driveCartesian(0, 0.5, steeringAdjust);
+        } else if (yIsAcceptable(ty) && xIsAcceptable(tx)){
+            fullStop();
         } else {
             mDrive.driveCartesian(0, 0, steeringAdjust);
-        }
+        } 
     }
 
     private boolean xIsAcceptable(double value) {
-        return (value > -8) && (value < 8);
+        return (value > -1) && (value < 1);
+    }
+
+    private boolean yIsAcceptable(double value) {
+        return (value > -3) && (value < 3);
+    }
+
+    public void resetErrors() {
+        priorI = 0;
+        priorE = 0;
     }
 }

@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
 
     //PIDSetup();
 
-    
+    limeTable = NetworkTableInstance.getDefault().getTable("limelight");
 
   }
 
@@ -156,10 +156,13 @@ public class Robot extends TimedRobot {
     //shooter.spinnyBoi2k(joy.getRawButton(3));
 
     if(joy.getRawButton(3)) {
+      limeTable.getEntry("ledMode").setNumber(3);
       driveTrain.oneUpRafael();
     }
     else {
       driveTrain.mecDrive(joy);
+      limeTable.getEntry("ledMode").setNumber(1);
+      driveTrain.resetErrors();
     }
   }
 
