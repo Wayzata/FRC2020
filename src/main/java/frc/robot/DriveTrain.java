@@ -72,14 +72,13 @@ public class DriveTrain {
             if (xIsAcceptable(tx)) {
                 steeringAdjust = 0.0;
             }
-            else if (tx > 0){
-                steeringAdjust = kP * tx;
-            } else if (tx < 0){
+            else {
                 steeringAdjust = kP * tx;
             }
         }
         else {
-            steeringAdjust = speed;
+            mDrive.driveCartesian(0, 0, speed);
+            return;
         }
 
         if(steeringAdjust > speed) {
@@ -91,14 +90,15 @@ public class DriveTrain {
 
         System.out.println(steeringAdjust);
         SmartDashboard.putNumber("Steering Adjust", steeringAdjust);
+        
         if (ta < 0.5 && tv == 1){
-            mDrive.driveCartesian(0, 0.6, steeringAdjust);
-        } else if (ta >= 0.5){
+            mDrive.driveCartesian(0, 0.3, steeringAdjust);
+        } else {
             mDrive.driveCartesian(0, 0, steeringAdjust);
         }
     }
 
     private boolean xIsAcceptable(double value) {
-        return (value > -3) && (value < 3);
+        return (value > -8) && (value < 8);
     }
 }

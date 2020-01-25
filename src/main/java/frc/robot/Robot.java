@@ -159,7 +159,7 @@ public class Robot extends TimedRobot {
       driveTrain.oneUpRafael();
     }
     else {
-      driveTrain.fullStop();
+      driveTrain.mecDrive(joy);
     }
   }
 
