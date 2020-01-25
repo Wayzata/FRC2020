@@ -76,7 +76,6 @@ public class Robot extends TimedRobot {
 
     
 
-    limeTable = NetworkTableInstance.getDefault().getTable("limeyboi");
   }
 
   /**
@@ -134,7 +133,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    driveTrain.mecDrive(joy);
+    //driveTrain.mecDrive(joy);
     //t.set(joy.getY());
     /*
     if(joy.getRawButtonPressed(5)) {
@@ -155,6 +154,13 @@ public class Robot extends TimedRobot {
     }
     */
     //shooter.spinnyBoi2k(joy.getRawButton(3));
+
+    if(joy.getRawButton(3)) {
+      driveTrain.oneUpRafael();
+    }
+    else {
+      driveTrain.fullStop();
+    }
   }
 
   

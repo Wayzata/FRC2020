@@ -2,11 +2,18 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
+
+    double ty, tx, tv, ta, steeringAdjust, forwardAdjust;
+    final double kP = 0.03;
+    final double speed = 0.3;
 
     WPI_TalonSRX backLeft;
     WPI_TalonSRX backRight;
@@ -16,6 +23,8 @@ public class DriveTrain {
     Encoder encoder;
 
     MecanumDrive mDrive;
+
+    NetworkTable limeTable;
 
     public DriveTrain() {
         // frontLeft = new WPI_TalonSRX(0);
@@ -32,12 +41,17 @@ public class DriveTrain {
        
         mDrive = new MecanumDrive(frontLeft, backLeft, frontRight, backRight);
         mDrive.setSafetyEnabled(false);
-        
+        limeTable = NetworkTableInstance.getDefault().getTable("limelight");
+       
     }
 
     public void mecDrive(Joystick j) {
         mDrive.driveCartesian(0.5 * j.getX(), -0.5 * j.getY(), 0.5 * j.getZ());
 
+    }
+
+    public void fullStop() {
+        mDrive.driveCartesian(0, 0, 0);
     }
 
     public void printThing() {
@@ -48,4 +62,43 @@ public class DriveTrain {
         frontLeft.setSelectedSensorPosition(0);
     }
 
+    public void oneUpRafael() {
+        tv = limeTable.getEntry("tv").getDouble(0);
+        tx = limeTable.getEntry("tx").getDouble(0);
+        ta = limeTable.getEntry("ta").getDouble(0);
+        SmartDashboard.putNumber("Area", ta);
+
+        if(tv == 1) {
+            if (xIsAcceptable(tx)) {
+                steeringAdjust = 0.0;
+            }
+            else if (tx > 0){
+                steeringAdjust = kP * tx;
+            } else if (tx < 0){
+                steeringAdjust = kP * tx;
+            }
+        }
+        else {
+            steeringAdjust = speed;
+        }
+
+        if(steeringAdjust > speed) {
+            steeringAdjust = speed;
+        }
+        else if(steeringAdjust < -speed) {
+            steeringAdjust = -speed;
+        }
+
+        System.out.println(steeringAdjust);
+        SmartDashboard.putNumber("Steering Adjust", steeringAdjust);
+        if (ta < 0.5 && tv == 1){
+            mDrive.driveCartesian(0, 0.6, steeringAdjust);
+        } else if (ta >= 0.5){
+            mDrive.driveCartesian(0, 0, steeringAdjust);
+        }
+    }
+
+    private boolean xIsAcceptable(double value) {
+        return (value > -3) && (value < 3);
+    }
 }
