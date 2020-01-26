@@ -7,21 +7,13 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Encoder;
-
-//import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -175,36 +167,36 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  private void PIDSetup() {
-    //t.set(ControlMode.Position, 5000);
-
-    t.configFactoryDefault();
-
-    t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
-
-    t.setSensorPhase(true);
-
-    t.setInverted(false);
-    
-    t.configNominalOutputForward(0, 30);
-    t.configNominalOutputReverse(0, 30);
-    t.configPeakOutputForward(1, 30);
-    t.configPeakOutputReverse(-1, 30);
-
-    t.configMotionAcceleration(0, 500);
-    t.configMotionCruiseVelocity(0, 500);
-    
-    t.configAllowableClosedloopError(0, 0, 30);
-
-    //First parameter is PID_loop_id
-    t.config_kF(0, 0.094);
-    t.config_kP(0, .35);
-    t.config_kI(0, 0.001);
-    t.config_kD(0, 3);
-
-    t.setSelectedSensorPosition(0, 0, 30);
-    //t.set(ControlMode.Position, 100);
-
-    //t.clearMotionProfileTrajectories();
-  }
+  //private void PIDSetup() {
+  //  //t.set(ControlMode.Position, 5000);
+  //
+  //  t.configFactoryDefault();
+  //
+  //  t.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 30);
+  //
+  //  t.setSensorPhase(true);
+  //
+  //  t.setInverted(false);
+  //  
+  //  t.configNominalOutputForward(0, 30);
+  //  t.configNominalOutputReverse(0, 30);
+  //  t.configPeakOutputForward(1, 30);
+  //  t.configPeakOutputReverse(-1, 30);
+  //
+  //  t.configMotionAcceleration(0, 500);
+  //  t.configMotionCruiseVelocity(0, 500);
+  //  
+  //  t.configAllowableClosedloopError(0, 0, 30);
+  //
+  //  //First parameter is PID_loop_id
+  //  t.config_kF(0, 0.094);
+  //  t.config_kP(0, .35);
+  //  t.config_kI(0, 0.001);
+  //  t.config_kD(0, 3);
+  //
+  //  t.setSelectedSensorPosition(0, 0, 30);
+  //  //t.set(ControlMode.Position, 100);
+  //
+  //  //t.clearMotionProfileTrajectories();
+  //}
 }
