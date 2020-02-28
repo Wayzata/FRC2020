@@ -20,7 +20,7 @@ public class Variables {
 
     // Index Speed Amounts
     public static final double intakeMotorSpeed = -0.55;
-    public static final double conveyorIndexSpeed = 0.85;
+    public static final double conveyorIndexSpeed = 0.90;
     public static final double feedIndexSpeed = 1.0;
 
     // Climbing Motor Speeds
@@ -43,9 +43,8 @@ public class Variables {
     public static final int colorSenseDownPort = 0;
     public static final int colorSenseUpPort = 1;
 
-    // Shooter Control Loop Amperages
-    public static final int leftShooterMotorAmperage = 10; // Update this value once tuned - NOT TUNED
-    public static final int rightShooterMotorAmperage = 10; // Update this value once tuned - NOT TUNED
+    // Shooter Control Loop Voltages
+    public static final double shooterNominalVoltage = 6.1; // 6.1 Update this value once tuned - NOT TUNED
 
     // Left Shooter Gains
     public static final double leftShooter_kP = 0;
@@ -54,9 +53,12 @@ public class Variables {
     public static final double leftShooter_kF = 0;
 
     // Right Shooter Gains
-    public static final double rightShooter_kP = 0;
+    public static final double rightShooter_kP = 0.5;
     public static final double rightShooter_kI = 0;
     public static final double rightShooter_kD = 0;
     public static final double rightShooter_kF = 0;
+
+    // Shooter Speed Gain
+    public static final double shooterDistance_kP = -(1.0 / 12.0);
 
 }

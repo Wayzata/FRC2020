@@ -94,11 +94,11 @@ public class Intake {
 
     public void setFullShoot(boolean bPressed){
         if (bPressed){
-            spinUpShooter(true);
+            spinUpShooter(true, 0);
             setFullConvey(true);
             intakeMotorOne.set(ControlMode.PercentOutput, Variables.intakeMotorSpeed);
         } else {
-            spinUpShooter(false);
+            spinUpShooter(false, 0);
             setFullConvey(false);
             intakeMotorOne.set(ControlMode.PercentOutput, 0);
         }
@@ -145,14 +145,16 @@ public class Intake {
      * Not as accurate as encoders but since it is a shooter we can align ourselves to adjust
      * for a certain amperage with our vision.
      */
-    public void spinUpShooter(boolean bPressed) {
+    public void spinUpShooter(boolean bPressed, double ty) {
         if (bPressed){
-            shooterOne.set(ControlMode.PercentOutput, Variables.shooterSpeed); 
-            shooterTwo.set(ControlMode.PercentOutput, -1 * Variables.shooterSpeed);
+            //shooterOne.set(ControlMode.PercentOutput, Variables.shooterSpeed); 
+            //shooterTwo.set(ControlMode.PercentOutput, -1 * Variables.shooterSpeed);
+            shooterOne.setVoltage(Variables.shooterNominalVoltage + Variables.shooterDistance_kP*ty);
+            shooterTwo.setVoltage(-1*(Variables.shooterNominalVoltage + Variables.shooterDistance_kP*ty));
             
             // Below for tuning amperage for current control loop
-            SmartDashboard.putNumber("Shooter One Amperage", shooterOne.getStatorCurrent());
-            SmartDashboard.putNumber("Shooter Two Amperage", shooterTwo.getStatorCurrent());
+            SmartDashboard.putNumber("Shooter Two Voltage", shooterTwo.getMotorOutputVoltage());
+            SmartDashboard.putNumber("Shooter One Voltage", shooterOne.getMotorOutputVoltage());
         } else {
             shooterOne.set(ControlMode.PercentOutput, 0);
             shooterTwo.set(ControlMode.PercentOutput, 0);
@@ -162,9 +164,9 @@ public class Intake {
      * Returns if the shooters are actually at the set amperage +- kTolerance AMPs
      */
     public boolean isReadyForShot(){
-        double kTolerance = 1; // Tolerance in amps for shooter motors
-        if (shooterOne.getStatorCurrent() <= Variables.leftShooterMotorAmperage + kTolerance && shooterOne.getStatorCurrent() >= Variables.leftShooterMotorAmperage - kTolerance){
-            if (shooterTwo.getStatorCurrent() <= Variables.rightShooterMotorAmperage + kTolerance && shooterTwo.getStatorCurrent() >= Variables.rightShooterMotorAmperage - kTolerance){
+        double kTolerance = 0.25; // Tolerance in amps for shooter motors
+        if (shooterOne.getMotorOutputVoltage() <= (Variables.shooterNominalVoltage + kTolerance) && shooterOne.getMotorOutputVoltage() >= Variables.shooterNominalVoltage - kTolerance){
+            if (shooterTwo.getMotorOutputVoltage() <= (Variables.shooterNominalVoltage + kTolerance) && shooterTwo.getMotorOutputVoltage() >= Variables.shooterNominalVoltage - kTolerance){
                 return true;
             } else {
                 return false;

@@ -96,6 +96,7 @@ public class Robot extends TimedRobot {
     controlPanel.encoder();
     climbing.checkEncoderReset();
     limeTable.getEntry("stream").setNumber(2.0);
+    driveTrain.putEncoders();
   }
 
   /**
@@ -168,7 +169,6 @@ public class Robot extends TimedRobot {
 
     if (joy.getTrigger()){
       limeTable.getEntry("ledMode").setNumber(3);
-      intake.spinUpShooter(true);
       driveTrain.targetGoal(); 
     }
     else {
@@ -177,7 +177,7 @@ public class Robot extends TimedRobot {
       }
       else {
         intake.setFullShoot(false);
-        intake.spinUpShooter(false);
+        intake.spinUpShooter(false, 0);
         intake.checkIntake(joy.getRawButton(2), joy.getRawButton(9));   
       }
       driveTrain.mecDrive(joy);

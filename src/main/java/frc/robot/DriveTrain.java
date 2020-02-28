@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.drive.MecanumDrive;
 // import edu.wpi.first.wpilibj.kinematics.MecanumDriveKinematics;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpiutil.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain {
 
@@ -98,6 +99,7 @@ public class DriveTrain {
         ta = limeTable.getEntry("ta").getDouble(0);
         ts = limeTable.getEntry("ts").getDouble(0);
 
+        Robot.intake.spinUpShooter(true, ty);
         if (tv == 1) {
             if (xIsAcceptable(tx)) {
                 zAdjust = 0;
@@ -148,17 +150,17 @@ public class DriveTrain {
         }
 
         // Set drivetrain to the calculated values ////NOTE: xAdjust is not currently
-        // being used, it is always zero
-        mDrive.driveCartesian(xAdjust, yAdjust, zAdjust);
+        // being used, it is always zero // maybe add back y :)
+        mDrive.driveCartesian(xAdjust, 0, zAdjust);
 
-        if(xIsAcceptable(tx) && yIsAcceptable(ty)) {
+        if(xIsAcceptable(tx)) { //  && yIsAcceptable(ty)
             if(shooting) {
                 if(System.currentTimeMillis() - startShootTime > 5000) {
-                    Robot.intake.setFullShoot(false);
+                    Robot.intake.setFullConvey(false);
                 }
                 else {
-                    if(xIsAcceptable(tx) && yIsAcceptable(ty)) {
-                        Robot.intake.setFullShoot(true);
+                    if(xIsAcceptable(tx)) { //&& yIsAcceptable(ty)
+                        Robot.intake.setFullConvey(true);
                     }
                 }
             }
@@ -224,5 +226,12 @@ public class DriveTrain {
 
     public void setShooting(boolean value) {
         shooting = value;
+    }
+
+    public void putEncoders(){
+        SmartDashboard.putNumber("Front Left Encoder", frontLeft.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Front Right Encoder", frontRight.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Back Left Encoder", backLeft.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Back Right Encoder", backRight.getSelectedSensorPosition());
     }
 }
