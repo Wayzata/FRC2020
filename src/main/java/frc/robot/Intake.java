@@ -149,8 +149,18 @@ public class Intake {
         if (bPressed){
             //shooterOne.set(ControlMode.PercentOutput, Variables.shooterSpeed); 
             //shooterTwo.set(ControlMode.PercentOutput, -1 * Variables.shooterSpeed);
-            shooterOne.setVoltage(Variables.shooterNominalVoltage + Variables.shooterDistance_kP*ty);
-            shooterTwo.setVoltage(-1*(Variables.shooterNominalVoltage + Variables.shooterDistance_kP*ty));
+            if(ty >= -6) {
+                shooterOne.setVoltage(Variables.shooterNominalVoltage);
+                shooterTwo.setVoltage(-1*(Variables.shooterNominalVoltage));
+            }
+            else if(ty >= -12) {
+                shooterOne.setVoltage(Variables.shooterNominalVoltage + Variables.shooterDistanceMiddle_kP*ty);
+                shooterTwo.setVoltage(-1*(Variables.shooterNominalVoltage + Variables.shooterDistanceMiddle_kP*ty));
+            }
+            else {
+                shooterOne.setVoltage(Variables.shooterNominalVoltage + Variables.shooterDistanceFar_kP*ty);
+                shooterTwo.setVoltage(-1*(Variables.shooterNominalVoltage + Variables.shooterDistanceFar_kP*ty));
+            }
             
             // Below for tuning amperage for current control loop
             SmartDashboard.putNumber("Shooter Two Voltage", shooterTwo.getMotorOutputVoltage());

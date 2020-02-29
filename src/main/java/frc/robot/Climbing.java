@@ -30,7 +30,7 @@ public class Climbing {
         if(pov == 180) {
             climbMotor.set(ControlMode.PercentOutput, Variables.climbMotorUpSpeed);
         }
-        else if(pov == 90) {
+        else if(pov == 0) {
             climbMotor.set(ControlMode.PercentOutput, Variables.climbMotorDownSpeed);
         }
         else {
@@ -124,7 +124,7 @@ public class Climbing {
 /*
 
 
-this is epic and no one knows what were doing
+this is epic and no one knows what we're doing
 but were epic and they
 
 

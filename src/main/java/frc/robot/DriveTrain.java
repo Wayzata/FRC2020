@@ -92,7 +92,7 @@ public class DriveTrain {
         mDrive.driveCartesian(0, 0, 0);
     }
 
-    public void targetGoal() {
+    public void targetGoal(Joystick joy) {
         tv = limeTable.getEntry("tv").getDouble(0);
         tx = limeTable.getEntry("tx").getDouble(0);
         ty = limeTable.getEntry("ty").getDouble(0);
@@ -144,24 +144,25 @@ public class DriveTrain {
                 }
             }
         } else { // If no target is in sight, spin until one is found
-            zAdjust = speed;
+            zAdjust = 0;
             yAdjust = 0;
             xAdjust = 0;
         }
 
         // Set drivetrain to the calculated values ////NOTE: xAdjust is not currently
         // being used, it is always zero // maybe add back y :)
-        mDrive.driveCartesian(xAdjust, 0, zAdjust);
+        mDrive.driveCartesian(0, 0, zAdjust);
 
         if(xIsAcceptable(tx)) { //  && yIsAcceptable(ty)
             if(shooting) {
                 if(System.currentTimeMillis() - startShootTime > 5000) {
                     Robot.intake.setFullConvey(false);
                 }
+                else if(System.currentTimeMillis() - startShootTime > 1000) {
+                    Robot.intake.setFullConvey(true);
+                }
                 else {
-                    if(xIsAcceptable(tx)) { //&& yIsAcceptable(ty)
-                        Robot.intake.setFullConvey(true);
-                    }
+                    Robot.intake.setFullConvey(false);
                 }
             }
             else {
@@ -199,7 +200,7 @@ public class DriveTrain {
     // }
 
     private boolean xIsAcceptable(double value) {
-        return (value > -1) && (value < 1);
+        return (value > -1.5) && (value < 1.5);
     }
 
     private boolean yIsAcceptable(double value) {

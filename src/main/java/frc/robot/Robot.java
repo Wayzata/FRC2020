@@ -130,7 +130,7 @@ public class Robot extends TimedRobot {
       case "Boring":
       default:
         if(crossedLine) {
-          driveTrain.targetGoal();
+          driveTrain.targetGoal(joy);
         }
         else {
           driveTrain.backUp();
@@ -169,7 +169,7 @@ public class Robot extends TimedRobot {
 
     if (joy.getTrigger()){
       limeTable.getEntry("ledMode").setNumber(3);
-      driveTrain.targetGoal(); 
+      driveTrain.targetGoal(joy); 
     }
     else {
       if(joy.getRawButton(10)) {
@@ -182,7 +182,7 @@ public class Robot extends TimedRobot {
       }
       driveTrain.mecDrive(joy);
       driveTrain.resetErrors();
-     // limeTable.getEntry("ledMode").setNumber(1);
+      //limeTable.getEntry("ledMode").setNumber(1);
     }
 
     
